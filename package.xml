@@ -1,21 +1,19 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>demo_package</name>
+  <name>mission_software_launch</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="phg6386@thi.de">philipp</maintainer>
+  <description>This package is supposed to launch the mission software on th eUAV</description>
+  <maintainer email="job8197@thi.de">Johan</maintainer>
   <license>MIT</license>
-  <url>https://github.com/THI-Drone/demo_package</url>
-  <author email="pgh6386@thi.de">philipp</author>
+  <url>https://github.com/THI-Drone/mission_software_launch</url>
+  <author email="job8197@thi.de">Johan</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <depend>rclcpp</depend>
-  <depend>interfaces</depend>
-  <depend>common_package</depend>
 
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <exec_depend>mission_control_package</exec_depend>
+  <exec_depend>qrcode_detection_package</exec_depend>
+  <exec_depend>waypoint_package</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
