@@ -7,7 +7,7 @@ def generate_launch_description():
     # ROS 2 Parameter configurations for the nodes
     fcc_bridge_params = {'UAV_ID': 'SIMULATOR'}
     mission_control_params = {'MDF_FILE_PATH': 'DEFAULT'}
-    qr_code_scanner_node_params = {'sim': True}
+    qr_code_scanner_node_params = {'sim': False}
 
     return LaunchDescription([
 
@@ -15,6 +15,7 @@ def generate_launch_description():
             cmd=['ros2', 'bag', 'record', '-e', 'uav_', '-o' , '~/records/rosbags'], 
             additional_env={'ROS_LOG_DIR' : '~/records/log_files'},
             output= 'screen'
+            # TODO fix ros bag
         ),
         Node(
             package='waypoint_package',
