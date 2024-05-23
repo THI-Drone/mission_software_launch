@@ -1,5 +1,8 @@
-from mission_software_launch.launch.launch import LaunchDescription
-from launch_ros.actions import Node, ExecuteProcess
+from launch import LaunchDescription
+from launch.actions import ExecuteProcess
+from launch_ros.actions import Node
+
+from common_package_py.node_names import NodeNames
 
 def generate_launch_description():
 
@@ -14,45 +17,32 @@ def generate_launch_description():
             cmd=['ros2', 'bag', 'record', '-e', 'uav_', '-o' , '~/records/rosbags'], 
             additional_env={'ROS_LOG_DIR' : '~/records/log_files'},
             output= 'screen'
-        ), 
-
-        Node(
-            package='telemetry_package',
-            executable='telemetry_node',
-            name='telemetry',
-            output='log'
-            # output= 'screen',
-            
         ),
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            name='waypoint',
+            name=NodeNames.WAYPOINT,
             output='log'
-            # output= 'screen',
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
-            name='mission_control',
+            name=NodeNames.MISSION_CONTROL,
             output='log',
-            # output= 'screen',
             parameters=[mission_control_params]
         ),
         Node(
             package='qrcode_detection_package',
-            executable='qrcode_detection_node',
-            name='qrcode_detection',
+            executable='qr_code_scanner_node',
+            name=NodeNames.QRCODE_SCANNER,
             output='log',
-            # output= 'screen',
             parameters=[qr_code_scanner_node_params]
         ),
         Node(
-            package='fcc_bridge_package',
+            package='fcc_bridge',
             executable='fcc_bridge',
-            name='fcc_bridge',
+            name=NodeNames.FCC_BRIDGE,
             output='log',
-            # output= 'screen',
             parameters=[fcc_bridge_params]
         )
     ])
