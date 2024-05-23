@@ -31,6 +31,7 @@ def generate_launch_description():
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
+            additional_env={'OPENCV_LOG_LEVEL' : 'FATAL'},
             output='log',
             parameters=[qr_code_scanner_node_params]
         ),
