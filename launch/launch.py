@@ -1,36 +1,41 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, PushRosNamespace
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, PushRosNamespace, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
 
 def generate_launch_description():
-    # Timestamps
+    # Timestampe
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
     log_directory = '/log/' + timestamp
     bag_directory = '/bag/' + timestamp
 
-
     # Commandline
     uav_id_arg = DeclareLaunchArgument(
         'UAV_ID',
-        default_value='SIMULATOR',
+        # default_value='SIMULATOR',
         description='ID for the UAV'
     )
     mdf_file_path_arg = DeclareLaunchArgument(
         'MDF_FILE_PATH',
-        default_value='DEFAULT',
+        # default_value='DEFAULT',
         description='Path to the Mission Definition File'
     )
     sim_arg = DeclareLaunchArgument(
         'sim',
-        default_value='True',
+        # default_value='True',
         description='Flag to run in simulation mode'
     )
     namespace_arg = DeclareLaunchArgument(
         'namespace',
-        default_value='uav_1',
+        # default_value='uav_1',
         description='Namespace for the UAV'
+    )
+
+    # Environment variable globally for all nodes
+    set_ros_log_dir = SetEnvironmentVariable(
+        name='ROS_LOG_DIR',
+        value=log_directory
     )
 
     # Launch parameters
@@ -38,27 +43,22 @@ def generate_launch_description():
     mdf_file_path = LaunchConfiguration('MDF_FILE_PATH')
     sim = LaunchConfiguration('sim')
     namespace = LaunchConfiguration('namespace')
-    
-    node_env = {'ROS_LOG_DIR': log_directory}
 
-
-    # Ros Bag
+     # Ros Bag
     ros2_bag_record = ExecuteProcess(
         cmd=['ros2', 'bag', 'record', '-e', 'uav_', '-o', bag_directory],
-        additional_env=node_env,
         output='screen',
         on_exit=Shutdown()
     )
-
-    
 
     return LaunchDescription([
         uav_id_arg,
         mdf_file_path_arg,
         sim_arg,
         namespace_arg,
+        set_ros_log_dir,    
 
-        PushRosNamespace(namespace),  
+        PushRosNamespace(namespace), 
         
         ros2_bag_record,
 
@@ -66,28 +66,24 @@ def generate_launch_description():
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            output='log',
-            additional_env=node_env
+            output='log'
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
             output='log',
-            parameters=[{'MDF_FILE_PATH': mdf_file_path}],
-            additional_env=node_env
+            parameters=[{'MDF_FILE_PATH': mdf_file_path}]
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
             output='log',
-            parameters=[{'sim': sim}],
-            additional_env=node_env
+            parameters=[{'sim': sim}]
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
             output='log',
-            parameters=[{'UAV_ID': uav_id}],
-            additional_env=node_env
+            parameters=[{'UAV_ID': uav_id}]
         )
     ])
