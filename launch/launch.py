@@ -3,6 +3,7 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
+
 def generate_launch_description():
     # Define the log directory and bag record paths
     log_directory = '/log'
@@ -50,28 +51,28 @@ def generate_launch_description():
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            output='log',
-            arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'waypoint_node.log'])]
+            output='log'
+            # arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'waypoint_node.log'])]
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
             output='log',
-            parameters=[{'MDF_FILE_PATH': mdf_file_path}],
-            arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'mission_control_node.log'])]
+            parameters=[{'MDF_FILE_PATH': mdf_file_path}]
+            # arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'mission_control_node.log'])]
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
             output='log',
-            parameters=[{'sim': sim}],
-            arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'qr_code_scanner_node.log'])]
+            parameters=[{'sim': sim}]
+            # arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'qr_code_scanner_node.log'])]
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
             output='log',
-            parameters=[{'UAV_ID': uav_id}],
-            arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'fcc_bridge.log'])]
+            parameters=[{'UAV_ID': uav_id}]
+            # arguments=['--ros-args', '--log-file', PathJoinSubstitution([log_directory, 'fcc_bridge.log'])]
         )
     ])
