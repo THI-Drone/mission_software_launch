@@ -13,22 +13,22 @@ def generate_launch_description():
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
         'UAV_ID',
-        default_value='SIMULATOR',
+        # default_value='SIMULATOR',
         description='ID for the UAV'
     )
     mdf_file_path_arg = DeclareLaunchArgument(
         'MDF_FILE_PATH',
-        default_value='DEFAULT',
+        # default_value='DEFAULT',
         description='Path to the Mission Definition File'
     )
     sim_arg = DeclareLaunchArgument(
         'sim',
-        default_value='True',
+        # default_value='True',
         description='Flag to run in simulation mode'
     )
     namespace_arg = DeclareLaunchArgument(
         'namespace',
-        default_value='uav_1',
+        # default_value='uav_1',
         description='Namespace for the UAV'
     )
 
