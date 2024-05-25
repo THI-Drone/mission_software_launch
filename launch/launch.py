@@ -1,16 +1,16 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, PushRosNamespace, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
 
 def generate_launch_description():
-    # Timestampe
+    # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    log_directory = '/log/' + timestamp
-    bag_directory = '/bag/' + timestamp
+    log_directory = 'log/' + timestamp
+    bag_directory = 'bag/' + timestamp
 
-    # Commandline
+    # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
         'UAV_ID',
         # default_value='SIMULATOR',
@@ -44,7 +44,7 @@ def generate_launch_description():
     sim = LaunchConfiguration('sim')
     namespace = LaunchConfiguration('namespace')
 
-     # Ros Bag
+    # ROS Bag record
     ros2_bag_record = ExecuteProcess(
         cmd=['ros2', 'bag', 'record', '-e', 'uav_', '-o', bag_directory],
         output='screen',
@@ -56,33 +56,35 @@ def generate_launch_description():
         mdf_file_path_arg,
         sim_arg,
         namespace_arg,
-        set_ros_log_dir,    
+        set_ros_log_dir,
 
-        PushRosNamespace(namespace), 
-        
         ros2_bag_record,
 
         # Nodes
         Node(
             package='waypoint_package',
             executable='waypoint_node',
+            namespace=namespace,
             output='log'
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
+            namespace=namespace,
             output='log',
             parameters=[{'MDF_FILE_PATH': mdf_file_path}]
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
+            namespace=namespace,
             output='log',
             parameters=[{'sim': sim}]
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
+            namespace=namespace,
             output='log',
             parameters=[{'UAV_ID': uav_id}]
         )
