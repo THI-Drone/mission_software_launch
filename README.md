@@ -1,6 +1,6 @@
 ## Ros Launch
 ```
-ros2 launch launch.py namespace='uav_1' UAV_ID='SIMULATOR' MDF_FILE_PATH='DEFAULT' sim='true'
+ros2 launch launch.py namespace:='uav_1' UAV_ID:='SIMULATOR' MDF_FILE_PATH:='DEFAULT' sim:='true'
 ```
 - Simulation => SIMULATOR
 - Drone1 => MAV_SYS_ID = 1
