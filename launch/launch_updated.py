@@ -7,8 +7,8 @@ from datetime import datetime
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    log_directory = '/log/' + timestamp
-    bag_directory = '/bag/' + timestamp
+    log_directory = 'log/' + timestamp
+    bag_directory = 'bag/' + timestamp
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
@@ -60,7 +60,7 @@ def generate_launch_description():
 
         ros2_bag_record,
 
-        # Nodes with namespace set directly
+        # Nodes
         Node(
             package='waypoint_package',
             executable='waypoint_node',
