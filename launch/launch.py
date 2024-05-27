@@ -8,7 +8,7 @@ from datetime import datetime
 
 def generate_launch_description():
     # Timestamp
-    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+    timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 
     log_directory = os.path.join('/log', timestamp)
     bag_directory = os.path.join('/bag', timestamp)
