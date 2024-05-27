@@ -47,13 +47,6 @@ def generate_launch_description():
     sim = LaunchConfiguration('sim')
     namespace = LaunchConfiguration('namespace')
 
-    # ROS Bag record
-    ros2_bag_record = ExecuteProcess(
-        cmd=['ros2', 'bag', 'record', '-e', 'uav_', '-o', bag_directory],
-        output='screen',
-        on_exit=Shutdown()
-    )
-
     return LaunchDescription([
         uav_id_arg,
         mdf_file_path_arg,
@@ -61,34 +54,36 @@ def generate_launch_description():
         namespace_arg,
         set_ros_log_dir,
 
-        ros2_bag_record,
-
         # Nodes
         Node(
             package='waypoint_package',
             executable='waypoint_node',
             namespace=namespace,
-            output='log'
+            output='log',
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
             namespace=namespace,
             output='log',
-            parameters=[{'MDF_FILE_PATH': mdf_file_path}]
+            parameters=[{'MDF_FILE_PATH': mdf_file_path}], 
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
             namespace=namespace,
             output='log',
-            parameters=[{'sim': sim}]
+            parameters=[{'sim': sim}], 
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
             namespace=namespace,
             output='log',
-            parameters=[{'UAV_ID': uav_id}]
+            parameters=[{'UAV_ID': uav_id}], 
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         )
     ])
