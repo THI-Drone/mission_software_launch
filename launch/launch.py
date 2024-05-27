@@ -1,14 +1,17 @@
+import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
 
+
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    log_directory = 'log/' + timestamp
-    bag_directory = 'bag/' + timestamp
+
+    log_directory = os.path.join('/log', timestamp)
+    bag_directory = os.path.join('/bag', timestamp)
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
