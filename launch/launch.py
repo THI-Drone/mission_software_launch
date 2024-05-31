@@ -12,6 +12,7 @@ def generate_launch_description():
 
     log_directory = os.path.join('/log', timestamp)
     bag_directory = os.path.join('/bag', timestamp)
+    img_directory = os.path.join('/images', timestamp)
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
@@ -75,7 +76,7 @@ def generate_launch_description():
             executable='qr_code_scanner_node',
             namespace=namespace,
             output='log',
-            parameters=[{'sim': sim}], 
+            parameters=[{'sim': sim, 'IMG_PATH': img_directory}], 
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
