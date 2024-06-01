@@ -1,38 +1,32 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
-
 
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 
     log_directory = os.path.join('/log', timestamp)
-    bag_directory = os.path.join('/bag', timestamp)
     img_directory = os.path.join('/images', timestamp)
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
         'UAV_ID',
-        # default_value='SIMULATOR',
         description='ID for the UAV'
     )
     mdf_file_path_arg = DeclareLaunchArgument(
         'MDF_FILE_PATH',
-        # default_value='DEFAULT',
         description='Path to the Mission Definition File'
     )
     sim_arg = DeclareLaunchArgument(
         'sim',
-        # default_value='True',
         description='Flag to run in simulation mode'
     )
     namespace_arg = DeclareLaunchArgument(
         'namespace',
-        # default_value='uav_1',
         description='Namespace for the UAV'
     )
 
@@ -61,6 +55,7 @@ def generate_launch_description():
             executable='waypoint_node',
             namespace=namespace,
             output='log',
+            remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
@@ -68,6 +63,7 @@ def generate_launch_description():
             executable='mission_control_node',
             namespace=namespace,
             output='log',
+            remappings=[('/rosout', 'rosout')],
             parameters=[{'MDF_FILE_PATH': mdf_file_path}], 
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
@@ -76,6 +72,7 @@ def generate_launch_description():
             executable='qr_code_scanner_node',
             namespace=namespace,
             output='log',
+            remappings=[('/rosout', 'rosout')],
             parameters=[{'sim': sim, 'IMG_PATH': img_directory}], 
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
@@ -84,6 +81,7 @@ def generate_launch_description():
             executable='fcc_bridge',
             namespace=namespace,
             output='log',
+            remappings=[('/rosout', 'rosout')],
             parameters=[{'UAV_ID': uav_id}], 
             arguments=['--ros-args', '--log-level', 'DEBUG']
         )
