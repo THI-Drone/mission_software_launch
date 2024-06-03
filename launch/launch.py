@@ -1,38 +1,32 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, Shutdown, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
-
 
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 
     log_directory = os.path.join('/log', timestamp)
-    bag_directory = os.path.join('/bag', timestamp)
     img_directory = os.path.join('/images', timestamp)
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
         'UAV_ID',
-        # default_value='SIMULATOR',
         description='ID for the UAV'
     )
     mdf_file_path_arg = DeclareLaunchArgument(
         'MDF_FILE_PATH',
-        # default_value='DEFAULT',
         description='Path to the Mission Definition File'
     )
     sim_arg = DeclareLaunchArgument(
         'sim',
-        # default_value='True',
         description='Flag to run in simulation mode'
     )
     namespace_arg = DeclareLaunchArgument(
         'namespace',
-        # default_value='uav_1',
         description='Namespace for the UAV'
     )
 
@@ -59,32 +53,36 @@ def generate_launch_description():
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            namespace=namespace,
+            namespace=namespace,  # Setzt den Namensraum
             output='log',
-            arguments=['--ros-args', '--log-level', 'DEBUG']
+            remappings=[('/rosout', [namespace, '/rosout'])],
+            # arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
-            namespace=namespace,
+            namespace=namespace,  # Setzt den Namensraum
             output='log',
-            parameters=[{'MDF_FILE_PATH': mdf_file_path}], 
-            arguments=['--ros-args', '--log-level', 'DEBUG']
+            parameters=[{'MDF_FILE_PATH': mdf_file_path}],
+            remappings=[('/rosout', [namespace, '/rosout'])],
+            # arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
-            namespace=namespace,
+            namespace=namespace,  # Setzt den Namensraum
             output='log',
-            parameters=[{'sim': sim, 'IMG_PATH': img_directory}], 
-            arguments=['--ros-args', '--log-level', 'DEBUG']
+            parameters=[{'sim': sim, 'IMG_PATH': img_directory}],
+            remappings=[('/rosout', [namespace, '/rosout'])],
+            # arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
-            namespace=namespace,
+            namespace=namespace,  # Setzt den Namensraum
             output='log',
-            parameters=[{'UAV_ID': uav_id}], 
-            arguments=['--ros-args', '--log-level', 'DEBUG']
+            parameters=[{'UAV_ID': uav_id}],
+            remappings=[('/rosout', [namespace, '/rosout'])],
+            # arguments=['--ros-args', '--log-level', 'DEBUG']
         )
     ])
