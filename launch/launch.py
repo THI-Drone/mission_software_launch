@@ -74,7 +74,7 @@ def generate_launch_description():
             output='log',  # Ensure logging to file
             parameters=[{'sim': sim, 'IMG_PATH': img_directory}],
             remappings=[('/rosout', [namespace, '/rosout'])],
-            arguments=['--ros-args', '--log-level', 'DEBUG']
+            arguments=['--prefix', 'taskset', '0x1000', '--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='fcc_bridge',
