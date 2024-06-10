@@ -53,36 +53,36 @@ def generate_launch_description():
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            namespace=namespace,  # Setzt den Namensraum
-            output='log',
+            namespace=namespace,  
+            output='log',  
             remappings=[('/rosout', [namespace, '/rosout'])],
-            # arguments=['--ros-args', '--log-level', 'DEBUG']
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
-            namespace=namespace,  # Setzt den Namensraum
-            output='log',
+            namespace=namespace,  
+            output='log',  
             parameters=[{'MDF_FILE_PATH': mdf_file_path}],
             remappings=[('/rosout', [namespace, '/rosout'])],
-            # arguments=['--ros-args', '--log-level', 'DEBUG']
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
-            namespace=namespace,  # Setzt den Namensraum
-            output='log',
+            namespace=namespace,  
+            output='log',  # Ensure logging to file
             parameters=[{'sim': sim, 'IMG_PATH': img_directory}],
             remappings=[('/rosout', [namespace, '/rosout'])],
-            # arguments=['--ros-args', '--log-level', 'DEBUG']
+            arguments=['--prefix', 'taskset', '0x1000', '--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
-            namespace=namespace,  # Setzt den Namensraum
-            output='log',
+            namespace=namespace,  
+            output='log', 
             parameters=[{'UAV_ID': uav_id}],
             remappings=[('/rosout', [namespace, '/rosout'])],
-            # arguments=['--ros-args', '--log-level', 'DEBUG']
+            arguments=['--ros-args', '--log-level', 'DEBUG']
         )
     ])
