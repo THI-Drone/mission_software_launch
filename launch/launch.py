@@ -1,16 +1,31 @@
+import errno
 import os
+
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
 
+def symlink_force(target, link_name, target_is_directory=False):
+    try:
+        os.symlink(target, link_name, target_is_directory)
+    except OSError as e:
+        if e.errno == errno.EEXIST:
+            os.remove(link_name)
+            os.symlink(target, link_name)
+        else:
+            raise e
+
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 
     log_directory = os.path.join('/log', timestamp)
+    symlink_force(timestamp, os.path.join('/log', 'latest'), True)
+        
     img_directory = os.path.join('/images', timestamp)
+    symlink_force(timestamp, os.path.join('/images', 'latest'), True)
 
     # Command line arguments
     uav_id_arg = DeclareLaunchArgument(
