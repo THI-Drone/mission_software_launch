@@ -7,6 +7,7 @@ from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from datetime import datetime
 
+
 def symlink_force(target, link_name, target_is_directory=False):
     try:
         os.symlink(target, link_name, target_is_directory)
@@ -17,13 +18,14 @@ def symlink_force(target, link_name, target_is_directory=False):
         else:
             raise e
 
+
 def generate_launch_description():
     # Timestamp
     timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 
     log_directory = os.path.join('/log', timestamp)
     symlink_force(timestamp, os.path.join('/log', 'latest'), True)
-        
+
     img_directory = os.path.join('/images', timestamp)
     symlink_force(timestamp, os.path.join('/images', 'latest'), True)
 
@@ -68,16 +70,16 @@ def generate_launch_description():
         Node(
             package='waypoint_package',
             executable='waypoint_node',
-            namespace=namespace,  
-            output='log',  
+            namespace=namespace,
+            output='log',
             remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='mission_control_package',
             executable='mission_control_node',
-            namespace=namespace,  
-            output='log',  
+            namespace=namespace,
+            output='log',
             parameters=[{'MDF_FILE_PATH': mdf_file_path}],
             remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
@@ -85,17 +87,18 @@ def generate_launch_description():
         Node(
             package='qrcode_detection_package',
             executable='qr_code_scanner_node',
-            namespace=namespace,  
+            namespace=namespace,
             output='log',  # Ensure logging to file
             parameters=[{'sim': sim, 'IMG_PATH': img_directory}],
             remappings=[('/rosout', 'rosout')],
-            arguments=['--prefix', 'taskset', '0x1000', '--ros-args', '--log-level', 'DEBUG']
+            arguments=['--prefix', 'taskset', '0x1000',
+                       '--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
             package='fcc_bridge',
             executable='fcc_bridge',
-            namespace=namespace,  
-            output='log', 
+            namespace=namespace,
+            output='log',
             parameters=[{'UAV_ID': uav_id}],
             remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
