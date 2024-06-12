@@ -70,7 +70,7 @@ def generate_launch_description():
             executable='waypoint_node',
             namespace=namespace,  
             output='log',  
-            remappings=[('/rosout', [namespace, '/rosout'])],
+            remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
@@ -79,7 +79,7 @@ def generate_launch_description():
             namespace=namespace,  
             output='log',  
             parameters=[{'MDF_FILE_PATH': mdf_file_path}],
-            remappings=[('/rosout', [namespace, '/rosout'])],
+            remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
@@ -88,7 +88,7 @@ def generate_launch_description():
             namespace=namespace,  
             output='log',  # Ensure logging to file
             parameters=[{'sim': sim, 'IMG_PATH': img_directory}],
-            remappings=[('/rosout', [namespace, '/rosout'])],
+            remappings=[('/rosout', 'rosout')],
             arguments=['--prefix', 'taskset', '0x1000', '--ros-args', '--log-level', 'DEBUG']
         ),
         Node(
@@ -97,7 +97,7 @@ def generate_launch_description():
             namespace=namespace,  
             output='log', 
             parameters=[{'UAV_ID': uav_id}],
-            remappings=[('/rosout', [namespace, '/rosout'])],
+            remappings=[('/rosout', 'rosout')],
             arguments=['--ros-args', '--log-level', 'DEBUG']
         )
     ])
